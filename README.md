@@ -40,7 +40,7 @@ After this step you can compile Companian by
 
     $ mvn clean install
 
-If you want to develop in Eclipse you should create the Eclipse projects by
+If you want to develop in Eclipse, you should create the Eclipse projects by
 
     $ mvn eclipse:eclipse -Dwtpversion=2.0
 
