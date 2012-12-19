@@ -49,3 +49,5 @@ Setup
 
 Companian uses a MySQL database to store its data. You have to setup a database in MySQL and
 configure Companian accordingly to use that database.
+
+[... more details to come ...]
