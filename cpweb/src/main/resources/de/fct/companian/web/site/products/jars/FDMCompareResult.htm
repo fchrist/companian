@@ -1,0 +1,44 @@
+#parse("/de/fct/companian/web/site/inc/header.htm")
+
+<script type="text/javascript">
+<!--
+function initPage() {
+	
+}
+
+function hideInfoDiffs() {
+  $(".diffInfo").hide();
+}
+//-->
+</script>
+
+<h2>Framework Compare Result</h2>
+
+<p>Comparing ${leftJar.artifact} <a href="${config.rootPath}/site/products/${product.productId}/jars/${leftJar.jarId}/doc">version ${leftJar.version}</a>
+on the <em>left side</em> with <a href="${config.rootPath}/site/products/${product.productId}/jars/${rightJar.jarId}/doc">version ${rightJar.version}</a>
+on the <em>right side</em>.</p>
+
+<p><a href="javascript:hideInfoDiffs()">Hide</a> differences with 'Info' rating.</p>
+
+<p>Computed <b>${result.diffCount}</b> differences where <b>${result.relevantDiffCount}</b> could be relevant.</p> 
+
+#macro ( diffentry $diff )
+  <ul>
+    <li class="diff${diff.rating}"><b>${diff.rating}</b> - ${diff.kind} @ ${diff.source.name}<br>
+        &gt; ${diff.description}<br>
+        <i>$!{diff.solution}</i></li>
+  #if (! $diff.subDiffs.empty )
+  	#foreach ( $subDiff in $diff.subDiffs )
+  		#diffentry ( $subDiff $depth )
+  	#end
+  #end
+  </ul>
+#end
+
+<div id="diffs">
+#foreach ( $diff in $result.diffs )
+	#diffentry ( $diff )
+#end
+</div>
+
+#parse("/de/fct/companian/web/site/inc/footer.htm")

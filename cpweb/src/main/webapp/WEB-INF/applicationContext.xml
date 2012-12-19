@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:aop="http://www.springframework.org/schema/aop"
+  xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
+
+  <import resource="classpath:cpanalyzeAppContext.xml"/>
+
+  <bean id="velocityEngine" class="org.apache.velocity.app.VelocityEngine" />
+  <bean id="velocityConfigurer" class="de.fct.companian.web.VelocityConfigurer" init-method="init">
+    <property name="velocityEngine" ref="velocityEngine" />
+    <property name="config">
+      <props>
+        <prop key="resource.loader">class</prop>
+        <prop key="class.resource.loader.description">Velocity Classpath Resource Loader</prop>
+        <prop key="class.resource.loader.class">org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader</prop>
+      </props>
+    </property>
+  </bean>
+
+  <bean id="configBean" class="de.fct.companian.web.beans.ConfigBean">
+  </bean>
+  
+  <!-- Pages and their Models -->
+  <bean id="indexPage" class="de.fct.companian.web.site.IndexPage" scope="request">
+    <property name="velocityEngine" ref="velocityEngine" />
+    <property name="configBean" ref="configBean" />
+    <property name="pageModel" ref="indexModel" />
+  </bean>  
+
+  <bean id="indexModel" class="de.fct.companian.web.site.IndexModel" scope="request" init-method="init">
+  	<constructor-arg ref="productDao" />
+  	<constructor-arg ref="jarDao" />
+  </bean>
+  
+  <bean id="productsPage" class="de.fct.companian.web.site.products.ProductsPage" scope="request">
+    <property name="velocityEngine" ref="velocityEngine" />
+    <property name="configBean" ref="configBean" />
+    <property name="pageModel" ref="productsModel" />
+    <property name="productJarsModel" ref="productJarsModel" />
+  </bean>
+  
+  <bean id="productsModel" class="de.fct.companian.web.site.products.ProductsModel" scope="request" init-method="init">
+    <constructor-arg ref="productDao" />
+  </bean>    
+
+  <bean id="productJarsModel" class="de.fct.companian.web.site.products.ProductJarsModel" scope="request" init-method="init">
+    <constructor-arg ref="productDao" />
+    <constructor-arg ref="jarDao" />
+  </bean>
+  
+  <bean id="jarsPage" class="de.fct.companian.web.site.products.jars.JarsPage" scope="request">
+    <property name="velocityEngine" ref="velocityEngine" />
+    <property name="configBean" ref="configBean" />
+    <property name="pageModel" ref="jarsModel" />
+    <property name="jarModel" ref="jarModel" />
+  </bean>
+  
+  <bean id="jarsModel" class="de.fct.companian.web.site.products.jars.JarsModel" scope="request" init-method="init">
+    <constructor-arg ref="jarDao" />
+  </bean>    
+
+  <bean id="jarModel" class="de.fct.companian.web.site.products.jars.JarModel" scope="request" init-method="init">
+    <constructor-arg ref="jarDao" />
+  </bean>
+  
+  <bean id="apiDocPage" class="de.fct.companian.web.site.products.jars.api.APIDocPage" scope="request">
+    <property name="velocityEngine" ref="velocityEngine" />
+    <property name="configBean" ref="configBean" />
+    <property name="pageModel" ref="apiDocModel" />
+  </bean>   
+   
+  <bean id="apiDocModel" class="de.fct.companian.web.site.products.jars.api.APIDocModel" scope="request" init-method="init">
+    <constructor-arg ref="jarDao" />
+  </bean>
+  
+  <bean id="packagePage" class="de.fct.companian.web.site.products.jars.api.PackagePage" scope="request">
+    <property name="velocityEngine" ref="velocityEngine" />
+    <property name="configBean" ref="configBean" />
+    <property name="pageModel" ref="packageModel" />
+  </bean>   
+   
+  <bean id="packageModel" class="de.fct.companian.web.site.products.jars.api.PackageModel" scope="request" init-method="init">
+    <constructor-arg ref="jarDao" />
+  </bean>
+  
+  <bean id="typePage" class="de.fct.companian.web.site.products.jars.api.TypePage" scope="request">
+    <property name="velocityEngine" ref="velocityEngine" />
+    <property name="configBean" ref="configBean" />
+    <property name="pageModel" ref="typeModel" />
+  </bean>   
+   
+  <bean id="typeModel" class="de.fct.companian.web.site.products.jars.api.TypeModel" scope="request" init-method="init">
+    <constructor-arg ref="jarDao" />
+  </bean>    
+
+  <bean id="methodPage" class="de.fct.companian.web.site.products.jars.api.MethodPage" scope="request">
+    <property name="velocityEngine" ref="velocityEngine" />
+    <property name="configBean" ref="configBean" />
+    <property name="pageModel" ref="methodModel" />
+  </bean>   
+   
+  <bean id="methodModel" class="de.fct.companian.web.site.products.jars.api.MethodModel" scope="request" init-method="init">
+    <constructor-arg ref="jarDao" />
+  </bean>
+  
+  <bean id="apiDlProxy" class="de.fct.companian.proxies.JelAPIDlProxy" scope="request">
+  	<constructor-arg ref="methodModel" />
+  </bean>
+    
+  <bean id="docPage" class="de.fct.companian.web.site.products.jars.doc.DocPage" scope="request">
+    <property name="velocityEngine" ref="velocityEngine" />
+    <property name="configBean" ref="configBean" />
+    <property name="pageModel" ref="docModel" />
+  </bean>   
+   
+  <bean id="docModel" class="de.fct.companian.web.site.products.jars.doc.DocModel" scope="request" init-method="init">
+    <constructor-arg ref="jarDao" />
+  </bean>
+  
+  <bean id="structureViewPage" class="de.fct.companian.web.site.products.jars.doc.StructureViewPage" scope="request">
+    <property name="velocityEngine" ref="velocityEngine" />
+    <property name="configBean" ref="configBean" />
+    <property name="pageModel" ref="structureViewModel" />
+    <property name="proxy" ref="structureDlProxy" />
+  </bean>   
+   
+  <bean id="structureViewModel" class="de.fct.companian.web.site.products.jars.doc.StructureViewModel" scope="request" init-method="init">
+    <constructor-arg ref="jarDao" />
+    <property name="proxy" ref="structureDlProxy" />
+  </bean>
+  
+  <bean id="structureDlProxy" class="de.fct.companian.model.binding.umlcomp.UMLCompArchitectureDlProxy" scope="request" />
+  
+  <bean id="behaviorViewPage" class="de.fct.companian.web.site.products.jars.doc.BehaviorViewPage" scope="request">
+    <property name="velocityEngine" ref="velocityEngine" />
+    <property name="configBean" ref="configBean" />
+    <property name="pageModel" ref="behaviorViewModel" />
+    <property name="proxy" ref="behaviorDlProxy" />
+  </bean>   
+   
+  <bean id="behaviorViewModel" class="de.fct.companian.web.site.products.jars.doc.BehaviorViewModel" scope="request" init-method="init">
+    <constructor-arg ref="jarDao" />
+    <property name="proxy" ref="behaviorDlProxy" />
+  </bean>
+  
+  <bean id="behaviorDlProxy" class="de.fct.companian.model.binding.umlact.UMLActBehaviorDlProxy" scope="request" />
+  
+  <bean id="bindingCapabilityPage" class="de.fct.companian.web.site.products.jars.doc.BindingCapabilityPage" scope="request">
+    <property name="velocityEngine" ref="velocityEngine" />
+    <property name="configBean" ref="configBean" />
+    <property name="pageModel" ref="bindingCapabilityModel" />
+  </bean>   
+   
+  <bean id="bindingCapabilityModel" class="de.fct.companian.web.site.products.jars.doc.BindingCapabilityModel" scope="request" init-method="init">
+    <constructor-arg ref="jarDao" />
+  </bean>
+  
+  <bean id="deploymentCapabilityPage" class="de.fct.companian.web.site.products.jars.doc.DeploymentCapabilityPage" scope="request">
+    <property name="velocityEngine" ref="velocityEngine" />
+    <property name="configBean" ref="configBean" />
+    <property name="pageModel" ref="deploymentCapabilityModel" />
+  </bean>   
+   
+  <bean id="deploymentCapabilityModel" class="de.fct.companian.web.site.products.jars.doc.DeploymentCapabilityModel" scope="request" init-method="init">
+    <constructor-arg ref="jarDao" />
+  </bean>  
+  
+  <bean id="metaEntryPage" class="de.fct.companian.web.site.products.jars.doc.MetaEntryPage" scope="request">
+    <property name="velocityEngine" ref="velocityEngine" />
+    <property name="configBean" ref="configBean" />
+    <property name="pageModel" ref="metaEntryModel" />
+  </bean>   
+   
+  <bean id="metaEntryModel" class="de.fct.companian.web.site.products.jars.doc.MetaEntryModel" scope="request" init-method="init">
+    <constructor-arg ref="jarDao" />
+  </bean>  
+  
+  <bean id="hsgPage" class="de.fct.companian.web.site.products.jars.doc.core.HsgPage" scope="request">
+    <property name="velocityEngine" ref="velocityEngine" />
+    <property name="configBean" ref="configBean" />
+    <property name="pageModel" ref="hsgModel" />
+  </bean>
+  
+  <bean id="hsgModel" class="de.fct.companian.web.site.products.jars.doc.core.HsgModel" scope="request" init-method="init">
+    <constructor-arg ref="jarDao" />
+  </bean>  
+
+  <bean id="hsPage" class="de.fct.companian.web.site.products.jars.doc.hotspot.HsPage" scope="request">
+    <property name="velocityEngine" ref="velocityEngine" />
+    <property name="configBean" ref="configBean" />
+    <property name="pageModel" ref="hsModel" />
+  </bean>
+  
+  <bean id="hsModel" class="de.fct.companian.web.site.products.jars.doc.hotspot.HsModel" scope="request" init-method="init">
+    <constructor-arg ref="jarDao" />
+  </bean>
+  
+  <bean id="hsUnitPage" class="de.fct.companian.web.site.products.jars.doc.hotspot.HsUnitPage" scope="request">
+    <property name="velocityEngine" ref="velocityEngine" />
+    <property name="configBean" ref="configBean" />
+    <property name="pageModel" ref="hsUnitModel" />
+  </bean>
+  
+  <bean id="hsUnitModel" class="de.fct.companian.web.site.products.jars.doc.hotspot.HsUnitModel" scope="request" init-method="init">
+    <constructor-arg ref="jarDao" />
+  </bean>
+  
+  <bean id="codingUnitPage" class="de.fct.companian.web.site.products.jars.doc.hotspot.CodingUnitPage" scope="request">
+    <property name="velocityEngine" ref="velocityEngine" />
+    <property name="configBean" ref="configBean" />
+    <property name="pageModel" ref="hsUnitModel" />
+    <property name="apiDlProxy" ref="apiDlProxy" />
+  </bean> 
+  
+  <bean id="hookPage" class="de.fct.companian.web.site.products.jars.doc.hotspot.HookPage" scope="request">
+    <property name="velocityEngine" ref="velocityEngine" />
+    <property name="configBean" ref="configBean" />
+    <property name="pageModel" ref="hookModel" />
+    <property name="apiDlProxy" ref="apiDlProxy" />
+  </bean> 
+
+  <bean id="hookModel" class="de.fct.companian.web.site.products.jars.doc.hotspot.HookModel" scope="request" init-method="init">
+    <constructor-arg ref="jarDao" />
+  </bean>
+  
+  <bean id="protocolPage" class="de.fct.companian.web.site.products.jars.doc.hotspot.ProtocolPage" scope="request">
+    <property name="velocityEngine" ref="velocityEngine" />
+    <property name="configBean" ref="configBean" />
+    <property name="pageModel" ref="protocolModel" />
+    <property name="protocolDlProxy" ref="protocolDlProxy" />
+  </bean> 
+
+  <bean id="protocolModel" class="de.fct.companian.web.site.products.jars.doc.hotspot.ProtocolModel" scope="request" init-method="init">
+    <constructor-arg ref="jarDao" />
+    <property name="protocolDlProxy" ref="protocolDlProxy" />
+  </bean>
+  
+  <bean id="protocolDlProxy" class="de.fct.companian.model.binding.umlpsc.UMLProtocolDlProxy" scope="request" />
+  
+  
+  <!-- Beans for the Companian Compatibility Check -->
+  
+  <bean id="analyzeBean" class="de.fct.companian.web.beans.AnalyzeBean">
+  </bean>
+  
+  <bean id="analyzePage" class="de.fct.companian.web.site.AnalyzePage" scope="request">
+    <property name="velocityEngine" ref="velocityEngine" />
+    <property name="configBean" ref="configBean" />
+    <property name="analyzeBean" ref="analyzeBean" />
+    <property name="pageModel" ref="analyzeModel" />
+  </bean>
+  
+  <bean id="analyzeModel" class="de.fct.companian.web.site.AnalyzeModel" scope="request" init-method="init">
+  </bean>  
+  
+  <bean id="comparePage" class="de.fct.companian.web.site.products.jars.ComparePage" scope="request">
+    <property name="velocityEngine" ref="velocityEngine" />
+    <property name="configBean" ref="configBean" />
+    <property name="pageModel" ref="compareModel" />
+  </bean>
+  
+  <bean id="compareModel" class="de.fct.companian.web.site.products.jars.CompareModel" scope="request" init-method="init">
+    <constructor-arg ref="jarDao" />
+    <property name="sviewProxy" ref="structureDlProxy" />
+    <property name="bviewProxy" ref="behaviorDlProxy" />
+    <property name="protocolProxy" ref="protocolDlProxy" />
+    <property name="apiProxy" ref="apiDlProxy" />
+  </bean>
+  
+  <bean id="analyzeUsePage" class="de.fct.companian.web.site.products.jars.AnalyzeUsePage" scope="request">
+    <property name="velocityEngine" ref="velocityEngine" />
+    <property name="configBean" ref="configBean" />
+    <property name="pageModel" ref="analyzeUseModel" />
+  </bean>
+  
+  <bean id="analyzeUseModel" class="de.fct.companian.web.site.products.jars.AnalyzeUseModel" scope="request" init-method="init">
+    <constructor-arg ref="jarDao" />
+    <property name="methodDao" ref="methodDao" />
+    <property name="classesDao" ref="classesDao" />
+  </bean>  
+  
+  <bean id="cccPage" class="de.fct.companian.web.site.CCCPage" scope="request">
+    <property name="velocityEngine" ref="velocityEngine" />
+    <property name="configBean" ref="configBean" />
+    <property name="pageModel" ref="cccModel" />
+  </bean>  
+
+  <bean id="cccModel" class="de.fct.companian.web.site.CCCModel" scope="request" init-method="init">
+  	<constructor-arg ref="jarDao" />
+  	<property name="analyzeUseModel" ref="analyzeUseModel" />
+  	<property name="compareModel" ref="compareModel" />
+  </bean> 
+  
+</beans>

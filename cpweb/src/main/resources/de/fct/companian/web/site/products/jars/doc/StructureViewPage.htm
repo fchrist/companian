@@ -1,0 +1,60 @@
+#parse("/de/fct/companian/web/site/inc/header.htm")
+
+<script type="text/javascript">
+<!--
+function initPage() {
+  jQuery("#description").aloha();
+
+  GENTICS.Aloha.EventRegistry.subscribe(GENTICS.Aloha, "editableDeactivated", saveEditable);
+}
+
+  function saveEditable(event, eventProperties) {
+    jQuery.ajax({
+      type: 'POST',
+      url: '${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc/sviews/${structureView.name}',
+      data: 'content=' + eventProperties.editable.getContents() + '&id=' + eventProperties.editable.getId(),
+      success: function(data, textStatus, jgXHR) {
+      }
+    });
+  }
+
+  function addComponentDiagram() {
+    jQuery.ajax({
+      type: 'POST',
+      url: '${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc/sviews/${structureView.name}/diagram',
+      data: jQuery("#addComponentDiagramForm").serialize(),
+      dataType: 'json',
+      success: function(data, textStatus, jqXHR) {
+        jQuery("#componentDiagramFile").val("");
+        jQuery("#architectureAsJSON").text(data.toJSONString());
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        alert("Error adding Component Diagram.\nReason: " + jqXHR.statusText + "\n" + jqXHR.responseText);
+      }
+    });
+  }
+   
+//-->
+</script>
+
+<h2>Structural View: ${structureView.name}</h2>
+<div id="description" class="editable">${structureView.description}</div>
+
+<p></p>
+
+<div id="architectureDiagram">
+<pre id="architectureAsJSON">${architectureAsJSON}</pre>
+</div>
+
+<div id="buttons">
+<h4>Add Links</h4>
+<ul>
+  <li>Link to UML Component Diagram file specified in an external UML editor:<br>
+  <form name="addComponentDiagramForm" id="addComponentDiagramForm"><input type="text"
+    id="componentDiagramFile" name="componentDiagramFile" size="50" /><input type="submit" value="Add"
+    onclick="addComponentDiagram(); return false;" /></form>
+  </li>
+</ul>
+</div>
+
+#parse("/de/fct/companian/web/site/inc/footer.htm")

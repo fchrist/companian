@@ -1,0 +1,38 @@
+#parse("/de/fct/companian/web/site/inc/header.htm")
+
+<script type="text/javascript">
+<!--
+function initPage() {
+
+}
+
+//-->
+</script>
+
+<h3>Method ${method.signature}</h3>
+
+<div class="split taj">
+${method.signature.description}
+</div>
+
+<div class="split tal">
+<h3>Signature</h3>
+#if ( ${method.signature.returnType.package.name} )
+  <a href="${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/api/${method.signature.returnType.package.name}/${method.signature.returnType.name}">${method.signature.returnType.fqtn}</a>
+#else
+  ${method.signature.returnType.fqtn}
+#end
+
+: ${method.signature.name}
+(
+#foreach ( ${param} in ${method.signature.parameters} )
+  #if ( ${param.package.name} )
+    <a href="${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/api/${param.package.name}/${param.name}">${param.fqtn}</a>
+  #else
+    ${param.fqtn}
+  #end
+#end
+)
+</div>
+
+#parse("/de/fct/companian/web/site/inc/footer.htm")

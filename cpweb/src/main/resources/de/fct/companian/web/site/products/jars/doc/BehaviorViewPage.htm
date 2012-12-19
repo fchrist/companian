@@ -1,0 +1,64 @@
+#parse("/de/fct/companian/web/site/inc/header.htm")
+
+<script type="text/javascript">
+<!--
+function initPage() {
+  jQuery("#description").aloha();
+
+  GENTICS.Aloha.EventRegistry.subscribe(GENTICS.Aloha, "editableDeactivated", saveEditable);
+}
+
+  function saveEditable(event, eventProperties) {
+    jQuery.ajax({
+      type: 'POST',
+      url: '${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc/bviews/${behaviorView.name}',
+      data: 'content=' + eventProperties.editable.getContents() + '&id=' + eventProperties.editable.getId(),
+      success: function(data, textStatus, jgXHR) {
+      }
+    });
+  }
+
+  function addActivityDiagram() {
+    jQuery.ajax({
+      type: 'POST',
+      url: '${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc/bviews/${behaviorView.name}/diagram',
+      data: jQuery("#addActivityDiagramForm").serialize(),
+      dataType: 'json',
+      success: function(data, textStatus, jqXHR) {
+        jQuery("#activityDiagramFile").val("");
+        jQuery("#architectureAsJSON").text(data.toJSONString());
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        alert("Error adding Activity Diagram.\nReason: " + jqXHR.statusText + "\n" + jqXHR.responseText);
+      }
+    });
+  }
+  
+//-->
+</script>
+
+<h2>Behavioral View: ${behaviorView.name}</h2>
+
+<div class="split">
+<div id="description" class="editable">${behaviorView.description}</div>
+</div>
+
+<div class="split">
+<div id="architectureDiagram">
+<p><a href="file://${behaviorView.processFile}">${behaviorView.processFile}</a></p>
+<pre id="architectureAsJSON">${architectureAsJSON}</pre>
+</div>
+
+<div id="buttons">
+<h4>Add Links</h4>
+<ul>
+  <li>Link to UML Activity Diagram file specified in an external UML editor:<br>
+  <form name="addActivityDiagramForm" id="addActivityDiagramForm"><input type="text"
+    id="activityDiagramFile" name="activityDiagramFile" size="50" /><input type="submit" value="Add"
+    onclick="addActivityDiagram(); return false;" /></form>
+  </li>
+</ul>
+</div>
+</div>
+
+#parse("/de/fct/companian/web/site/inc/footer.htm")

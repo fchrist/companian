@@ -1,0 +1,7 @@
+<div id="products">
+<ul>
+#foreach ( $product in $products )
+	<li><a href="${config.rootPath}/site/products/${product.productId}">${product.name}</a></li>
+#end
+</ul>
+</div>

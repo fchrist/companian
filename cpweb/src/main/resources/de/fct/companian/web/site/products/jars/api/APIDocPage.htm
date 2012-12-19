@@ -1,0 +1,21 @@
+#parse("/de/fct/companian/web/site/inc/header.htm")
+
+<script type="text/javascript">
+<!--
+function initPage() {
+
+}
+
+//-->
+</script>
+
+<div class="box">
+<h3>Packages</h3>
+<ul>
+  #foreach ( ${pack} in ${api.packages} )
+  <li><a href="${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/api/${pack.name}">${pack.name}</a></li>
+  #end
+</ul>
+</div>
+
+#parse("/de/fct/companian/web/site/inc/footer.htm")

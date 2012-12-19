@@ -1,0 +1,13 @@
+#parse("/de/fct/companian/web/site/inc/header.htm")
+
+<div id="indexed_archives" class="box">
+<h3>Indexed Archives</h3>
+<ul>
+  #foreach ( $jar in $jars )
+  <li><a href="${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}">${jar.artifact}
+  (${jar.version})</a></li>
+  #end
+</ul>
+</div>
+
+#parse("/de/fct/companian/web/site/inc/footer.htm")

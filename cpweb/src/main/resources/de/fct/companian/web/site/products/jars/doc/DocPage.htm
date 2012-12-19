@@ -1,0 +1,192 @@
+#parse("/de/fct/companian/web/site/inc/header.htm")
+
+<script type="text/javascript">
+<!--
+function initPage() {
+  jQuery("#documentation").aloha();
+
+  GENTICS.Aloha.EventRegistry.subscribe(GENTICS.Aloha, "editableDeactivated", saveEditable);
+}
+
+  function saveEditable(event, eventProperties) {
+    jQuery.ajax({
+      type: 'POST',
+      url: '${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc',
+      data: 'content=' + eventProperties.editable.getContents() + '&id=' + eventProperties.editable.getId(),
+      success: function(data, textStatus, jgXHR) {
+      }
+    });
+  }
+
+  function putStructureView() {
+    jQuery.ajax({
+      type: 'PUT',
+      url: "${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc/sviews",
+      dataType: 'json',
+      data: jQuery("#newStructureViewForm").serialize(),
+      success: function(data, textStatus, jgXHR) {
+        jQuery("#structureViews ul").append('<li><a href="${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc/sviews/' + data.name + '">' + data.name + '</a></li>');
+        jQuery("#structureViewName").val("");
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        alert("Error putting new Structure View.\n" + jqXHR.statusText + "\n" + jqXHR.responseText);
+      } 
+    });
+  }
+
+  function putBehaviorView() {
+    jQuery.ajax({
+      type: 'PUT',
+      url: "${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc/bviews",
+      dataType: 'json',
+      data: jQuery("#newBehaviorViewForm").serialize(),
+      success: function(data, textStatus, jgXHR) {
+        jQuery("#behaviorViews ul").append('<li><a href="${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc/bviews/' + data.name + '">' + data.name + '</a></li>');
+        jQuery("#behaviorViewName").val("");
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        alert("Error putting new Behavior View.\n" + jqXHR.statusText + "\n" + jqXHR.responseText);
+      } 
+    });
+  }  
+
+  function saveNewHotSpotGroup() {
+    jQuery.ajax({
+      type: 'POST',
+      url: "${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc/hsgs",
+      dataType: 'json',
+      data: jQuery("#newHotSpotGroupForm").serialize(),
+      success: function(data, textStatus, jgXHR) {
+        jQuery("#hotSpotGroups ul").append('<li>' + data.name + '</li>');
+        jQuery("#hotSpotGroupName").val("");
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        alert("Error saving new hotspot group. Reason: " + textStatus);
+      } 
+    });
+  }
+
+  function putBinding() {
+    jQuery.ajax({
+      type: 'PUT',
+      url: "${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc/bindings",
+      dataType: 'json',
+      data: jQuery("#newBindingForm").serialize(),
+      success: function(data, textStatus, jgXHR) {
+        jQuery("#bindings ul").append('<li><a href="${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc/bindings/' + data.name + '">' + data.name + '</a></li>');
+        jQuery("#name").val("");
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        alert("Error saving new Binding Capability.\n" + jqXHR.statusText + "\n" + jqXHR.responseText);
+      } 
+    });
+  }
+
+  function putDeployment() {
+    jQuery.ajax({
+      type: 'PUT',
+      url: "${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc/deployments",
+      dataType: 'json',
+      data: jQuery("#newDeploymentForm").serialize(),
+      success: function(data, textStatus, jgXHR) {
+        jQuery("#deployments ul").append('<li><a href="${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc/deployments/' + data.name + '">' + data.name + '</a></li>');
+        jQuery("#name").val("");
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        alert("Error saving new Deployment Capability.\n" + jqXHR.statusText + "\n" + jqXHR.responseText);
+      } 
+    });
+  }
+//-->
+</script>
+
+<div id="documentation" class="split editable">#if ( ${fd} )
+${fd.description} #else Add your framework description here... #end</div>
+
+<div class="split">
+
+<div id="architecturalViews" class="box">
+<h3>Architectural Views</h3>
+	<div id="structureViews">
+	<h4>Structural Views</h4>
+	<ul>
+		#foreach ( ${view} in ${fd.structureViews} )
+		<li><a href="${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc/sviews/${view.name}">${view.name}</a></li>
+		#end
+        <li>Add new and enter its name:<br>
+        <form name="newStructureViewForm" id="newStructureViewForm"><input
+          type="text" id="structureViewName" name="structureViewName" /> <input type="submit" value="Add"
+          onclick="putStructureView(); return false;" /></form>
+        </li>    
+	</ul>
+	</div>
+	
+	<div id="behaviorViews">
+	<h4>Behavioral Views</h4>
+	<ul>
+		#foreach ( ${view} in ${fd.behaviorViews} )
+		<li><a href="${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc/bviews/${view.name}">${view.name}</a></li>		
+		#end
+        <li>Add new and enter its name:<br>
+        <form name="newBehaviorViewForm" id="newBehaviorViewForm"><input
+          type="text" id="behaviorViewName" name="behaviorViewName" /> <input type="submit" value="Add"
+          onclick="putBehaviorView(); return false;" /></form>
+        </li>     
+	</ul>
+	</div>
+</div>
+
+<div id="hotSpotGroups" class="box">
+<h3>Hotspot Groups</h3>
+<ul>
+	#foreach ( ${hsg} in ${fd.hotSpotGroups} )
+	<li><a
+		href="${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc/hsgs/${hsg.name}">${hsg.name}</a></li>
+	#end
+    <li>Add new and enter its name:<br>
+    <form name="newHotSpotGroupForm" id="newHotSpotGroupForm"><input
+      type="text" id="hotSpotGroupName" name="hotSpotGroupName" /> <input type="submit" value="Add"
+      onclick="saveNewHotSpotGroup(); return false;" /></form>
+    </li>
+  
+</ul>
+</div>
+
+<div id="bindings" class="box">
+<h3>Binding Capabilities</h3>
+<ul>
+	#foreach ( ${binding} in ${fd.bindingCapabilities} )
+	<li><a
+		href="${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc/bindings/${binding.name}">${binding.name}</a>
+	[ Remove ]</li>
+	#end
+    <li>Add new and enter its name:<br>
+    <form name="newBindingForm" id="newBindingForm"><input
+      type="text" id="bindingName" name="bindingName" /> <input type="submit" value="Add"
+      onclick="putBinding(); return false;" /></form>
+    </li>
+  
+</ul>
+</div>
+
+<div id="deployments" class="box">
+<h3>Deployment Capabilities</h3>
+<ul>
+	#foreach ( ${deployment} in ${fd.deploymentCapabilities} )
+	<li><a
+		href="${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc/deployments/${deployment.name}">${deployment.name}</a>
+	[ Remove ]</li>
+	#end
+    <li>Add new and enter its name:<br>
+    <form name="newDeploymentForm" id="newDeploymentForm"><input
+      type="text" id="deploymentName" name="deploymentName" /> <input type="submit" value="Add"
+      onclick="putDeployment(); return false;" /></form>
+    </li> 
+  
+</ul>
+</div>
+
+</div>
+
+
+#parse("/de/fct/companian/web/site/inc/footer.htm")

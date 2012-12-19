@@ -1,0 +1,43 @@
+#parse("/de/fct/companian/web/site/inc/header.htm")
+
+<script type="text/javascript">
+<!--
+  function initPage() {
+	jQuery("#hsUnitName").aloha();
+    jQuery("#hsUnitDescription").aloha();
+    GENTICS.Aloha.EventRegistry.subscribe(GENTICS.Aloha, "editableDeactivated", saveEditable);
+  }
+
+  function saveEditable(event, eventProperties) {
+    jQuery.ajax({
+      type: 'POST',
+      url: '${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc/hsgs/${hsg.name}/hss/${hs.name}/units/${hsu.name}',
+      data: 'content=' + eventProperties.editable.getContents() + '&id=' + eventProperties.editable.getId(),
+      success: function(data, textStatus, jgXHR) {
+        if (eventProperties.editable.getId() == 'hsUnitName') {
+          window.location.href = '${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc/hsgs/${hsg.name}/hss/${hs.name}/units/' + eventProperties.editable.getContents();
+        }          
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        alert("Error updating hotspot unit.\n" + jqXHR.statusText + "\n" + jqXHR.responseText);
+        jQuery("#" + eventProperties.editable.getId()).text('${hsu.name}');
+      }
+    });
+  }
+  
+//-->
+</script>
+
+<div id="subnavigation">&gt; <a
+	href="${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/api"
+	target="_blank">Browse API</a></div>
+
+<h2>${hsu.kind.description}: <span id="hsUnitName" class="editable">${hsu.name}</span></h2>
+
+<div id="hsUnitDescription" class="editable">${hsu.description}</div>
+
+
+<div id="hsUnitButtons">
+</div>
+
+#parse("/de/fct/companian/web/site/inc/footer.htm")

@@ -1,0 +1,131 @@
+#parse("/de/fct/companian/web/site/inc/header.htm")
+
+<script type="text/javascript">
+<!--
+  function initPage() {
+
+  }
+
+  function callAPICompare() {
+    var otherJarId = jQuery("#selectcomparedjar").val();
+    var url = "${config.rootPath}/site/products/${product.productId}/jars/compare?left=${jar.jarId}&right=" + otherJarId;
+    window.location.href = url;
+  }
+
+  function callFrameworkCompare() {
+    var otherJarId = jQuery("#selectcomparedjar").val();
+    var url = "${config.rootPath}/site/products/${product.productId}/jars/compare/fdm?left=${jar.jarId}&right=" + otherJarId;
+    window.location.href = url;
+  }
+
+  function callAnalyzeUse() {
+	    var usedJarId = jQuery("#selectusedjar").val();
+	    var url = "${config.rootPath}/site/products/${product.productId}/jars/analyzeuse?using=${jar.jarId}&used=" + usedJarId;
+	    window.location.href = url;
+	  }
+
+  function copyFDMFromJar() {
+    jQuery.ajax({
+      type: 'PUT',
+      url: "${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc",
+      dataType: 'json',
+      data: jQuery("#fdmFromVersionForm").serialize(),
+      success: function(data, textStatus, jgXHR) {
+        alert(textStatus + "\nCopied FDM from version " + data.fromVersion);
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        alert("Error copying FDM.\n" + jqXHR.statusText + "\n" + jqXHR.responseText);
+      } 
+    });
+  }
+//-->
+</script>
+
+<div id="jarinfo" class="box">
+<h3>Archive Info</h3>
+<table class="vertical_table">
+  <tbody>
+    <tr>
+      <th>ID</th>
+      <td>${jar.jarId}</td>
+    </tr>
+    <tr>
+      <th>Product</th>
+      <td><a href="${config.rootPath}/site/products/${product.productId}">${product.name}</a></td>
+    </tr>    
+    <tr>
+      <th>Artifact</th>
+      <td>${jar.artifact}</td>
+    </tr>
+    <tr>
+      <th>Version</th>
+      <td>${jar.version}</td>
+    </tr>
+    <tr>
+      <th>Filename</th>
+      <td>${jar.jarname}</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div id="fdm_doc" class="box">
+<h3>Framework Documentation</h3>
+<p>Read and edit the
+<a href="${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc">framework documentation</a>
+specified as a Framework Description Model (FDM).</p>
+<p>If you would like to start documenting this framework, you can also copy the framework documentation
+from a previous version of this archive:</p>
+<form name="fdmFromVersionForm" id="fdmFromVersionForm">
+  <select name="fdmFromJar" id="fdmFromJar" size="1">
+  #foreach ( ${otherVersion} in ${otherVersions} )
+  <option value="${otherVersion.jarId}">${otherVersion.version}</option>
+  #end
+  </select>
+  <input type="submit" value="Copy FDM" onClick="copyFDMFromJar(); return false;" />
+</form>
+<p><b>Note</b>: This will overwrite any existing documentation without any further warning!</p>
+</div>
+
+<div id="api_doc" class="box">
+<h3>API Documentation</h3>
+<p>Read the <a href="${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/api">API docs</a>
+which were generated from the archive's sources during the indexing process.</p>
+</div>
+
+#if ( !${otherVersions.empty} )
+<div id="jarcomparewith" class="box">
+<h3>API Compare</h3>
+  <p>Compare the API in version ${jar.version} with another version selected below.</p>
+  <select name="selectcomparedjar" id="selectcomparedjar" size="1">
+  #foreach ( ${otherVersion} in ${otherVersions} )
+    <option value="${otherVersion.jarId}">${otherVersion.version}</option>
+  #end
+  </select>
+  <input type="button" value="Compare" onClick="callAPICompare()" />
+  
+<h3>Framework Compare</h3>
+  <p>Compare the framework version ${jar.version} with another version selected below.</p>
+  <select name="selectcomparedjar" id="selectcomparedjar" size="1">
+  #foreach ( ${otherVersion} in ${otherVersions} )
+    <option value="${otherVersion.jarId}">${otherVersion.version}</option>
+  #end
+  </select>
+  <input type="button" value="Compare" onClick="callFrameworkCompare()" />  
+</div>
+#end
+
+<div id="usageAnalysis" class="box">
+<h3>Framework Usage Analysis</h3>
+<p>Analyze how the current '${jar.artifact} ${jar.version}' uses a given framework. The framework
+usage analysis identifies used hotspots documented in the framework documentation of that framework.
+Please, select the framework for the usage analysis:</p>
+<select name="selectusedjar" id="selectusedjar" size="1">
+  #foreach ( ${usedJar} in ${useableJars} )
+  <option value="${usedJar.jarId}">${usedJar.product.name} :: ${usedJar.artifact} - ${usedJar.version}</option>
+  #end
+</select>
+<input type="button" value="Analyze" onClick="callAnalyzeUse()" />
+</div>
+
+#parse("/de/fct/companian/web/site/inc/footer.htm")

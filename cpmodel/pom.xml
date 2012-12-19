@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+  xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>companian-reactor</artifactId>
+    <groupId>de.fct.companian</groupId>
+    <version>1.0-SNAPSHOT</version>
+    <relativePath>../</relativePath>
+  </parent>
+
+  <artifactId>cpmodel</artifactId>
+  <name>Companian - Model</name>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.eclipse.emf</groupId>
+      <artifactId>emf-common</artifactId>
+      <version>2.5.0.v200906151043</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.emf</groupId>
+      <artifactId>ecore</artifactId>
+      <version>2.5.0.v200906151043</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.emf.ecore</groupId>
+      <artifactId>ecore-xmi</artifactId>
+      <version>2.5.0.v200906151043</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.uml2</groupId>
+      <artifactId>uml2-common</artifactId>
+      <version>1.5.0.v200905041045</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.uml2</groupId>
+      <artifactId>uml</artifactId>
+      <version>3.0.1.v200908281330</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.uml2.uml</groupId>
+      <artifactId>uml-resources</artifactId>
+      <version>3.0.0.v200906011111</version>
+      <scope>compile</scope>
+   </dependency>
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>1.5.3</version>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.testng</groupId>
+      <artifactId>testng</artifactId>
+      <version>5.9</version>
+      <scope>test</scope>
+      <classifier>jdk15</classifier>
+    </dependency>
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <version>1.5.3</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+</project>

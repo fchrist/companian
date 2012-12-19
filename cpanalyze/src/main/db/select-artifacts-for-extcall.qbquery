@@ -1,0 +1,3 @@
+﻿SELECT p.name, j.artifact, j.version FROM products p
+LEFT JOIN (jars j, classes c, methods m) ON (p.productId = j.productId AND j.jarId = c.jarId AND c.classId = m.classId)
+WHERE c.fqcn=? AND m.signature=?;

@@ -1,0 +1,140 @@
+#parse("/de/fct/companian/web/site/inc/header.htm")
+
+<script type="text/javascript">
+<!--
+  function initPage() {
+	jQuery("#hsName").aloha();
+    jQuery("#hotSpotDescription").aloha();
+    GENTICS.Aloha.EventRegistry.subscribe(GENTICS.Aloha, "editableDeactivated", saveEditable);
+  }
+
+  function saveEditable(event, eventProperties) {
+    jQuery.ajax({
+      type: 'POST',
+      url: '${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc/hsgs/${hsg.name}/hss/${hs.name}',
+      data: 'content=' + eventProperties.editable.getContents() + '&id=' + eventProperties.editable.getId(),
+      success: function(data, textStatus, jgXHR) {
+          if (eventProperties.editable.getId() == 'hsName') {
+              window.location.href = '${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc/hsgs/${hsg.name}/hss/' + eventProperties.editable.getContents();
+          }          
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+          alert("Error updating Hotspot Group.\n" + jqXHR.statusText + "\n" + jqXHR.responseText);
+          jQuery("#" + eventProperties.editable.getId()).text('${hs.name}');
+      }
+    });
+  }
+
+  function saveNewUnit() {
+    jQuery.ajax({
+      type: 'POST',
+      url: "${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc/hsgs/${hsg.name}/hss/${hs.name}/units",
+      dataType: 'json',
+      data: jQuery("#newUnitForm").serialize(),
+      success: function(data, textStatus, jgXHR) {
+        jQuery("#hotSpotUnits ul").append('<li><a href="${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc/hsgs/${hsg.name}/hss/${hs.name}/units/' + data.name + '">' + data.name + '</a></li>');
+        jQuery("#name").val("");
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        alert("Error saving new Hotspot Unit.\n" + jqXHR.statusText + "\n" + jqXHR.responseText);
+      } 
+    });
+  }  
+
+  function linkBinding() {
+    jQuery.ajax({
+      type: 'POST',
+      url: "${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc/hsgs/${hsg.name}/hss/${hs.name}/binding",
+      dataType: 'json',
+      data: jQuery("#linkBindingForm").serialize(),
+      success: function(data, textStatus, jgXHR) {
+        jQuery("#binding ul").append('<li><a href="${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc/bindings/' + data.name + '">' + data.name + '</a></li>');
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        alert("Error linking Binding.\n" + jqXHR.statusText + "\n" + jqXHR.responseText);
+      } 
+    });
+  }
+
+  function linkDeployment() {
+    jQuery.ajax({
+      type: 'POST',
+      url: "${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc/hsgs/${hsg.name}/hss/${hs.name}/deployment",
+      dataType: 'json',
+      data: jQuery("#linkDeploymentForm").serialize(),
+      success: function(data, textStatus, jgXHR) {
+        jQuery("#deployment ul").append('<li><a href="${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc/deployments/' + data.name + '">' + data.name + '</a></li>');
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        alert("Error linking Deployment.\n" + jqXHR.statusText + "\n" + jqXHR.responseText);
+      } 
+    });
+  }  
+//-->
+</script>
+
+<div class="split">
+<h2>Hotspot: <span id="hsName" class="editable">${hs.name}</span></h2>
+
+<div id="hotSpotDescription" class="editable">${hs.description}</div>
+</div>
+
+<div class="split">
+<div id="hotSpotUnits" class="box">
+<h4>Coding Units</h4>
+<ul>
+  #foreach ( ${hsu} in ${hs.units} )
+  <li><a
+    href="${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc/hsgs/${hsg.name}/hss/${hs.name}/units/${hsu.name}">${hsu.name}</a>
+    [ Remove ]</li>
+  #end
+  <li>Link to a new <b>Coding Unit</b> - enter its name:<br>
+  <form name="newUnitForm" id="newUnitForm"><input type="text" id="name" name="name" /><input
+    type="submit" value="Add" onclick="saveNewUnit(); return false;" /></form>
+  </li>
+</ul>
+</div>
+
+<div id="binding" class="box">
+<h4>Linked Binding Capability</h4>
+<ul>
+  #if ( ${hs.binding} )
+  <li><a
+    href="${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc/bindings/${hs.binding.name}">${hs.binding.name}</a>
+    [ Remove ]</li>
+  #end
+  <li>Link to an existing <b>Binding Capability</b>:<br>
+  <form name="linkBindingForm" id="linkBindingForm">
+  <select name="bindingName" id="bindingName" size="1">
+    #foreach ( ${binding} in ${fd.bindingCapabilities}  )
+    <option value="${binding.name}">${binding.name}</option>
+    #end
+  </select>
+  <input type="submit" value="Link" onclick="linkBinding(); return false;" /></form>
+  </li>
+</ul>
+</div>
+
+<div id="deployment" class="box">
+<h4>Linked Deployment Capability</h4>
+<ul>
+  #if ( ${hs.deployment} )
+  <li><a
+    href="${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc/deployments/${hs.deployment.name}">${hs.deployment.name}</a>
+    [ Remove ]</li>
+  #end
+  <li>Link to an existing <b>Deployment Capability</b>:<br>
+  <form name="linkDeploymentForm" id="linkDeploymentForm">
+  <select name="deploymentName" id="deploymentName" size="1">
+    #foreach ( ${deployment} in ${fd.deploymentCapabilities}  )
+    <option value="${deployment.name}">${deployment.name}</option>
+    #end
+  </select>
+  <input type="submit" value="Link" onclick="linkDeployment(); return false;" /></form>
+  </li>
+</ul>
+</div>
+
+</div>
+
+#parse("/de/fct/companian/web/site/inc/footer.htm")

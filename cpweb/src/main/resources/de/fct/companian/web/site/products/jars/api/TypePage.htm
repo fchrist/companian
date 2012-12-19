@@ -1,0 +1,49 @@
+#parse("/de/fct/companian/web/site/inc/header.htm")
+
+<script type="text/javascript">
+<!--
+function initPage() {
+
+}
+
+//-->
+</script>
+
+
+<div class="split taj">
+<h3>Type ${type.fqtn}</h3>
+${type.description}
+</div>
+
+<div class="split tal">
+<h4>Methods</h4>
+<ul>
+  #foreach ( ${method} in ${type.methods} )
+      <li><strong><code>
+	  #if ( ${method.signature.returnType.package.name} )
+	    <a href="${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/api/${method.signature.returnType.package.name}/${method.signature.returnType.name}">${method.signature.returnType.fqtn}</a>
+	  #else
+	    ${method.signature.returnType.fqtn}
+	  #end
+
+      : ${method.signature.name}
+      (
+      #foreach ( ${param} in ${method.signature.parameters} )
+      	#if ( ${param.package.name} )
+      	  <a href="${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/api/${param.package.name}/${param.name}">${param.fqtn}</a>
+      	#else
+      	  ${param.fqtn}
+      	#end
+      #end
+      )
+      </code>
+      [
+      <a href="${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/api/${package.name}/${type.name}/${method.signature}">URI</a>
+      ]</strong><br>
+      <p>${method.signature.description}</p>
+      </li>
+  #end
+</ul>
+</div>
+
+#parse("/de/fct/companian/web/site/inc/footer.htm")

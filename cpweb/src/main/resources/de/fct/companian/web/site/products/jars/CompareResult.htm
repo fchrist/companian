@@ -1,0 +1,82 @@
+#parse("/de/fct/companian/web/site/inc/header.htm")
+
+<script type="text/javascript">
+<!--
+  function initPage() {
+
+  }
+//-->
+</script>
+
+<h2>API Compare Result</h2>
+
+<p>
+  Comparing the APIs of ${leftJar.artifact} <a
+    href="${config.rootPath}/site/products/${product.productId}/jars/${leftJar.jarId}/api">version
+    ${leftJar.version}</a> with <a
+    href="${config.rootPath}/site/products/${product.productId}/jars/${rightJar.jarId}/api)">version
+    ${rightJar.version}</a>.
+</p>
+
+<p>
+  The API compare result may not be very convincing. It indicates added and deleted methods or
+  classes but it does not reflect any higher level of abstraction. If you would like to see the result of
+  a comparison at a higher level of abstraction, use the
+  <a href="compare/fdm?left=${leftJar.jarId}&right=${rightJar.jarId}">framework comparison</a>.
+</p>
+
+<p>Computed <b>${diffCount}</b> differences.</p>
+
+#if ( ${addedRight.empty} && ${deletedRight.empty} )
+<p>
+  <em>No relevant changes found. The versions seem to be 100% compatible.</em>
+</p>
+#end #if (! ${addedRight.empty} )
+<div id="addedRight" class="split">
+<h3>Added to <a href="${config.rootPath}/site/products/${product.productId}/jars/${rightJar.jarId}">version ${rightJar.version}</a></h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Method</th>
+        <!-- th>Method AccessFlags</th -->
+        <th>Class</th>
+        <!-- th>Class AccessFlags</th -->
+      </tr>
+    </thead>
+    <tbody>
+      #foreach ( ${result} in ${addedRight} )
+      <tr>
+        <td>${result.methodSignature}</td>
+        <!-- td>${result.methodAccessFlags}</td -->
+        <td>${result.fqcn}</td>
+        <!-- td>${result.classAccessFlags}</td -->
+      </tr>
+      #end
+    </tbody>
+  </table>
+</div>
+#end #if (! ${deletedRight.empty} )
+<div id="deletedRight" class="split">
+<h3>Deleted in <a href="${config.rootPath}/site/products/${product.productId}/jars/${rightJar.jarId}">version ${rightJar.version}</a></h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Method</th>
+        <!--  th>Method AccessFlags</th -->
+        <th>Class</th>
+        <!-- th>Class AccessFlags</th -->
+      </tr>
+    </thead>
+    <tbody>
+      #foreach ( ${result} in ${deletedRight} )
+      <tr>
+        <td>${result.methodSignature}</td>
+        <!--  td>${result.methodAccessFlags}</td -->
+        <td>${result.fqcn}</td>
+        <!-- td>${result.classAccessFlags}</td -->
+      </tr>
+      #end
+    </tbody>
+  </table>
+</div>
+#end #parse("/de/fct/companian/web/site/inc/footer.htm")

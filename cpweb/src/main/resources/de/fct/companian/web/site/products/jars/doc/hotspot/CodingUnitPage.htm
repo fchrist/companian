@@ -1,0 +1,184 @@
+#parse("/de/fct/companian/web/site/inc/header.htm")
+
+<script type="text/javascript">
+<!--
+  function initPage() {
+	jQuery("#hsUnitName").aloha();
+    jQuery("#hsUnitDescription").aloha();
+    GENTICS.Aloha.EventRegistry.subscribe(GENTICS.Aloha, "editableDeactivated", saveEditable);
+  }
+
+  function saveEditable(event, eventProperties) {
+    jQuery.ajax({
+      type: 'POST',
+      url: '${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc/hsgs/${hsg.name}/hss/${hs.name}/units/${hsu.name}',
+      data: 'content=' + eventProperties.editable.getContents() + '&id=' + eventProperties.editable.getId(),
+      success: function(data, textStatus, jgXHR) {
+        if (eventProperties.editable.getId() == 'hsUnitName') {
+          window.location.href = '${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc/hsgs/${hsg.name}/hss/${hs.name}/units/' + eventProperties.editable.getContents();
+        }          
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        alert("Error updating hotspot unit.\n" + jqXHR.statusText + "\n" + jqXHR.responseText);
+        jQuery("#" + eventProperties.editable.getId()).text('${hsu.name}');
+      }
+    });
+  }
+
+  function addHooksThroughType() {
+    jQuery.ajax({
+      type: 'POST',
+      url: '${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc/hsgs/${hsg.name}/hss/${hs.name}/units/${hsu.name}/type',
+      data: jQuery("#addHooksThroughTypeForm").serialize(),
+	  dataType: 'json',
+      success: function(data, textStatus, jqXHR) {
+    	jQuery("#typeapiurl").val("");
+        if (jqXHR.status == 404) {
+          alert(jqXHR.statusText + "\n" + jqXHR.responseText);
+        }
+        else {
+          if (data.hooks.length > 0) {
+            alert("Added " + data.hooks.length + " new Hooks through this type.");
+          }
+          else {
+            alert("No new Hooks were added through this type.");
+          }
+        }
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        alert("Error linking type.\nReason: " + jqXHR.statusText + "\n" + jqXHR.responseText);
+      }
+    });
+  }
+
+  function addHookThroughMethod() {
+    jQuery.ajax({
+      type: 'POST',
+      url: '${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc/hsgs/${hsg.name}/hss/${hs.name}/units/${hsu.name}/hooks',
+      data: jQuery("#addHookThroughMethodForm").serialize(),
+	  dataType: 'json',
+      success: function(data, textStatus, jqXHR) {
+        jQuery("#methodapiuri").val("");
+        if (jqXHR.status == 404) {
+          alert(jqXHR.statusText + "\n" + jqXHR.responseText);
+        }
+        else {
+          alert("Added Hook " + data.signature);
+        }
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        alert("Error linking Hook.\nReason: " + jqXHR.statusText + "\n" + jqXHR.responseText);
+      }
+    });
+  }  
+
+  function removeHook(path, elementId) {
+    jQuery.ajax({
+      type: 'DELETE',
+      url: '${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc/hsgs/${hsg.name}/hss/${hs.name}/units/${hsu.name}/hooks?methodapipath=' + path,
+  	  dataType: 'json',
+      success: function(data, textStatus, jqXHR) {
+        jQuery("#" + elementId).remove();
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        alert("Error removing Hook.\nReason: " + jqXHR.statusText + "\n" + jqXHR.responseText);
+      }
+    });
+  }
+
+  function addHookProtocol() {
+    jQuery.ajax({
+      type: 'POST',
+      url: '${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc/hsgs/${hsg.name}/hss/${hs.name}/units/${hsu.name}/protocols',
+      data: jQuery("#addHookProtocolForm").serialize(),
+      dataType: 'json',
+      success: function(data, textStatus, jqXHR) {
+        jQuery("#hookProtocolFile").val("");
+        alert("Hook protocol added successfully");
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        alert("Error adding Hook protocol.\nReason: " + jqXHR.statusText + "\n" + jqXHR.responseText);
+      }
+    });
+  }
+
+  function removeHookProtocol(file, elementId) {
+    jQuery.ajax({
+      type: 'DELETE',
+      url: '${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc/hsgs/${hsg.name}/hss/${hs.name}/units/${hsu.name}/protocols?hookProtocolFile=' + file,
+  	  dataType: 'json',
+      success: function(data, textStatus, jqXHR) {
+        jQuery("#" + elementId).remove();
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        alert("Error removing Hook protocols.\nReason: " + jqXHR.statusText + "\n" + jqXHR.responseText);
+      }
+    });
+  }  
+//-->
+</script>
+
+<div class="split">
+<h3>${hsu.kind.description}: <span id="hsUnitName" class="editable">${hsu.name}</span></h3>
+
+<div id="hsUnitDescription" class="editable">${hsu.description}</div>
+</div>
+
+<div class="split">
+<div id="type" class="box">
+<h4>To be implemented Type</h4>
+<ul>
+  #if ( ${hsu.typeAPIPath} )
+  <li><a href="${config.rootPath}${hsu.typeAPIPath}" target="_blank">${hsu.typeName}</a></li>
+  #end
+  <li>Link to be implemented type (and its Hooks) through API type link
+  (<a href="${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/api" target="_blank">Browse API</a>):<br>
+  <form name="addHooksThroughTypeForm" id="addHooksThroughTypeForm"><input type="text" id="typeapiuri"
+    name="typeapiuri" size="25" /><input type="submit" value="Add"
+    onclick="addHooksThroughType(); return false;" /></form>
+  </li>  
+</ul>
+</div>
+
+<div id="protocols" class="box">
+<h4>Protocols</h4>
+<ul>
+  #set ( $protocolCount = 0 )
+  #foreach ( ${protocol} in ${hsu.protocols} )
+  #set ( $protocolCount = $protocolCount + 1 )
+  <li id="protocolli${protocolCount}"><a
+    href="${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc/hsgs/${hsg.name}/hss/${hs.name}/units/${hsu.name}/protocols?hookProtocolFile=${protocol.hookProtocolFile}">${protocol.hookProtocolFile}</a>
+  <span id="remove_protocolli${protocolCount}">[<a
+    href="javascript:removeHookProtocol('${protocol.hookProtocolFile}', 'protocolli${protocolCount}');">Remove</a>]</span></li>
+  #end
+  <li>Link to Hook protocol file specified in an external UML editor:<br>
+  <form name="addHookProtocolForm" id="addHookProtocolForm"><input type="text"
+    id="hookProtocolFile" name="hookProtocolFile" size="25" /><input type="submit" value="Add"
+    onclick="addHookProtocol(); return false;" /></form>
+  </li>
+</ul>
+</div>
+
+<div id="hooks" class="box">
+<h4>Hooks</h4>
+<ul>
+  #set ( $hookCount = 0 )
+  #foreach ( ${hook} in ${hsu.hooks} )
+  #set ( $hookCount = $hookCount + 1 )
+  <li id="hookli${hookCount}"><a
+    href="${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc/hsgs/${hsg.name}/hss/${hs.name}/units/${hsu.name}/hooks?methodapipath=${hook.methodAPIPath}">${hook.signature}</a>
+  <span id="remove_hookli${hookCount}">[<a
+    href="javascript:removeHook('${hook.methodAPIPath}', 'hookli${hookCount}');">Remove</a>]</span></li>
+  #end
+  <li>Link to be implemented Hook through API method link:<br>
+  <form name="addHookThroughMethodForm" id="addHookThroughMethodForm"><input type="text"
+    id="methodapiuri" name="methodapiuri" size="25" /><input type="submit" value="Add"
+    onclick="addHookThroughMethod(); return false;" /></form>
+  </li>  
+</ul>
+</div>
+
+
+</div>
+
+#parse("/de/fct/companian/web/site/inc/footer.htm")

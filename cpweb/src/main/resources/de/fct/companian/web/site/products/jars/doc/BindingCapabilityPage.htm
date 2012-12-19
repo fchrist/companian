@@ -1,0 +1,80 @@
+#parse("/de/fct/companian/web/site/inc/header.htm")
+
+<script type="text/javascript">
+<!--
+  function initPage() {
+    jQuery("#description").aloha();
+
+    GENTICS.Aloha.EventRegistry.subscribe(GENTICS.Aloha, "editableDeactivated", saveEditable);
+  }
+
+  function saveEditable(event, eventProperties) {
+    jQuery.ajax({
+      type: 'POST',
+      url: '${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc/bindings/${binding.name}',
+      data: 'content=' + eventProperties.editable.getContents() + '&id=' + eventProperties.editable.getId(),
+      success: function(data, textStatus, jgXHR) {
+      }
+    });
+  }
+
+  function putNewMetaEntry() {
+    jQuery.ajax({
+      type: 'PUT',
+      url: "${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc/bindings/${binding.name}/metaentries",
+      dataType: 'json',
+      data: jQuery("#newMetaEntryForm").serialize(),
+      success: function(data, textStatus, jgXHR) {
+        jQuery("#metaEntries ul").append('<li><a href="${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc/bindings/${binding.name}/metaentries/' + data.name + '">' + data.name + '</a></li>');
+        jQuery("#metaEntryName").val("");
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        alert("Error putting new Meta Entry.\n" + jqXHR.statusText + "\n" + jqXHR.responseText);
+      } 
+    });
+  }
+  
+//-->
+</script>
+
+<div class="split">
+<h2>Binding Capability: ${binding.name}</h2>
+
+<div id="description" class="editable">
+${binding.description}
+</div>
+</div>
+
+<div class="split">
+
+<div id="apiCalls" class="box">
+<h3>API Calls</h3>
+<ul>
+	#foreach ( ${apiCall} in ${binding.bindingDescription.apiCalls} )
+	<li>${apiCall.methodAPIPath}<br>${apiCall.description}</li>
+	#end
+    <li>Add new and enter the API documentation path<br>
+    <form name="newApiCallForm" id="newApiCallForm"><input
+      type="text" id="name" name="name" size="25" /> <input type="submit" value="Add"
+      onclick="saveNewApiCall(); return false;" /></form>
+    </li>  
+</ul>
+</div>
+
+<div id="metaEntries" class="box">
+<h3>Meta Entries</h3>
+<ul>
+	#foreach ( ${metaEntry} in ${binding.bindingDescription.metaEntries} )
+	<li><a href="${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc/bindings/${binding.name}/metaentries/${metaEntry.name}">${metaEntry.name}</a></li>
+	#end
+    <li>Add new and enter its name:<br>
+    <form name="newMetaEntryForm" id="newMetaEntryForm"><input
+      type="text" id="metaEntryName" name="metaEntryName" size="25"/> <input type="submit" value="Add"
+      onclick="putNewMetaEntry(); return false;" /></form>
+    </li>  
+</ul>
+</div>
+
+</div>
+
+#parse("/de/fct/companian/web/site/inc/footer.htm")

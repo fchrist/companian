@@ -1,0 +1,5 @@
+﻿# Zählt alle Methoden, die private sind UND keinen Eintrag in ExtCalls UND keinen Eintrag in ExtLinks haben
+
+SELECT COUNT(*) FROM methods m
+LEFT JOIN (extcalls ec, extlinks el) ON (ec.methodId=m.methodId AND el.methodId=m.methodId)
+WHERE (m.accessFlags & 2)=2 AND ec.methodId IS NULL AND el.methodId IS NULL;

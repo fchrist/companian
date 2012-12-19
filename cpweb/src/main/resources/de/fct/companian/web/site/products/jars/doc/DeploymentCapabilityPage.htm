@@ -1,0 +1,45 @@
+#parse("/de/fct/companian/web/site/inc/header.htm")
+
+<script type="text/javascript">
+<!--
+  function initPage() {
+    jQuery("#description").aloha();
+    jQuery("#packageFormatDescription").aloha();
+    jQuery("#installationDescription").aloha();
+    
+    GENTICS.Aloha.EventRegistry.subscribe(GENTICS.Aloha, "editableDeactivated", saveEditable);
+  }
+
+  function saveEditable(event, eventProperties) {
+    jQuery.ajax({
+      type: 'POST',
+      url: '${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc/deployments/${deployment.name}',
+      data: 'content=' + eventProperties.editable.getContents() + '&id=' + eventProperties.editable.getId(),
+      success: function(data, textStatus, jgXHR) {
+      }
+    });
+  }
+  
+//-->
+</script>
+
+<div class="split">
+<h3>Deployment Capability: ${deployment.name}</h3>
+<div id="description" class="editable">
+${deployment.description}
+</div>
+</div>
+
+<div class="split">
+<h3>Package Format Description</h3>
+<div id="packageFormatDescription" class="editable">
+${deployment.deployment.packageFormatDescription}
+</div>
+
+<h3>Installation Description</h3>
+<div id="installationDescription" class="editable">
+${deployment.deployment.installationDescription}
+</div>
+</div>
+
+#parse("/de/fct/companian/web/site/inc/footer.htm")

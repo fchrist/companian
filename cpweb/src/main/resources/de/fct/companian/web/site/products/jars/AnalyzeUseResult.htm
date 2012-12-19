@@ -1,0 +1,44 @@
+#parse("/de/fct/companian/web/site/inc/header.htm")
+
+<script type="text/javascript">
+<!--
+  function initPage() {
+
+  }
+//-->
+</script>
+
+<h2>Analyze Use Result</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Hotspot</th>
+      <th>Implementing Class</th>
+    </tr>
+  </thead>
+  <tbody>
+    #foreach ( ${result} in ${useResults} )
+    <tr>
+      <td valign="top"><b>${result.hotSpotGroup.name}</b> :: <b>${result.hotSpot.name}</b><br />
+      ${result.hotSpotUnit.name}</td>
+      <td valign="top">
+        #foreach ( ${confidence} in ${result.confidenceList} )
+          <table>
+            <tr>
+              <td>Coverage:</td>
+              <td><b>${confidence.confidence}</b></td>
+            </tr>
+            <tr>
+              <td>Class:</td>
+              <td><b>${confidence.clazz.fqcn}</b></td>
+            </tr>
+          </table>
+        #end
+      </td>
+    </tr>
+    #end
+  </tbody>
+</table>
+
+#parse("/de/fct/companian/web/site/inc/footer.htm")

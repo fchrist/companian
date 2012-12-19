@@ -1,0 +1,23 @@
+«IMPORT metamodel»
+
+«EXTENSION template::GeneratorExtensions»
+
+«DEFINE main FOR Model»
+	«EXPAND javaClass FOREACH entities()»
+«ENDDEFINE»
+
+«DEFINE javaClass FOR Entity»
+	«FILE name+".java"»
+		public class «name»  {
+			«FOREACH features AS t ITERATOR it»
+				private «t.type.name» «t.name»;
+				public void set«t.name.toFirstUpper()»(«t.type.name» a) {
+					this.«t.name» = a;
+				}
+				public «t.type.name» get«t.name.toFirstUpper()»() {
+					return «t.name»;
+					}
+			«ENDFOREACH»
+		}
+	«ENDFILE»
+«ENDDEFINE»

@@ -1,0 +1,49 @@
+#parse("/de/fct/companian/web/site/inc/header.htm")
+
+<script type="text/javascript">
+<!--
+function initPage() {
+	
+}
+
+function hideInfoDiffs() {
+  $(".diffInfo").hide();
+}
+
+function showInfoDiffs() {
+  $(".diffInfo").show();
+}
+//-->
+</script>
+
+<h2>Check Results</h2>
+
+<p><a href="javascript:hideInfoDiffs()">Hide</a> differences with 'Info' rating.</p>
+<p><a href="javascript:showInfoDiffs()">Show</a> differences with 'Info' rating.</p>
+
+<div id="cccInfo">
+<table>
+<tbody>
+<tr>
+	<th>Application</th>
+	<td>${usingJar.product.name} :: ${usingJar.artifact} - ${usingJar.version}</td>
+</tr>	
+<tr>
+	<th>Used Framework</th>
+	<td>${usedJar.product.name} :: ${usedJar.artifact} - ${usedJar.version}</td>
+</tr>	
+<tr>
+	<th>Future Framework Version</th>
+	<td>${futureJar.product.name} :: ${futureJar.artifact} - ${futureJar.version}</td>
+</tr>	
+</tbody>
+</table>
+</div>
+
+<p>Computed <b>${diffCount}</b> differences where <b>${relevantDiffCount}</b> are relevant.</p>
+
+<div id="cccResult">
+${diffsAsHtml}
+</div>
+
+#parse("/de/fct/companian/web/site/inc/footer.htm")

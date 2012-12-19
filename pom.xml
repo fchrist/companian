@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>de.fct.companian</groupId>
+  <artifactId>companian-reactor</artifactId>
+  <packaging>pom</packaging>
+  <name>Companian - Reactor</name>
+  <version>1.0-SNAPSHOT</version>
+
+  <developers>
+    <developer>
+      <id>fchrist</id>
+      <name>Fabian Christ</name>
+      <email>fchrist@s-lab.upb.de</email>
+      <url>http://s-lab.upb.de/people</url>
+      <organization>Software Quality Lab (s-lab)</organization>
+      <organizationUrl>http://s-lab.upb.de</organizationUrl>
+    </developer>
+  </developers>
+  
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties> 
+  
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.5</source>
+          <target>1.5</target>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  
+  <repositories>
+    <repository>
+      <id>maven repo</id>
+      <name>maven repo</name>
+      <url>http://repo1.maven.org/maven2/</url>
+    </repository>
+    <repository>
+      <id>jboss-public-repository-group</id>
+      <name>JBoss Public Maven Repository Group</name>
+      <url>https://repository.jboss.org/nexus/content/groups/public-jboss/</url>
+      <layout>default</layout>
+      <releases>
+        <enabled>true</enabled>
+        <updatePolicy>never</updatePolicy>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+        <updatePolicy>never</updatePolicy>
+      </snapshots>
+    </repository>
+    <repository>
+      <id>java.net</id>
+      <url>http://download.java.net/maven/1</url>
+      <layout>legacy</layout>
+    </repository>
+  </repositories>
+  
+  
+  <modules>
+    <module>cpanalyze</module>
+    <module>cpmodel</module>
+    <module>cpcompare</module>
+    <module>cpweb</module>
+  </modules>
+
+</project>

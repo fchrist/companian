@@ -1,0 +1,74 @@
+#parse("/de/fct/companian/web/site/inc/header.htm")
+
+<script type="text/javascript">
+<!--
+  function initPage() {
+
+  }
+
+  function addConstraint() {
+    jQuery.ajax({
+      type: 'POST',
+      url: '${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc/hsgs/${hsg.name}/hss/${hs.name}/units/${hsu.name}/hooks/constraints?methodapipath=${hook.methodAPIPath}',
+      data: jQuery("#addConstraintForm").serialize(),
+	  dataType: 'json',
+      success: function(data, textStatus, jqXHR) {
+        jQuery("#assertion").val("");
+        jQuery("textarea#assertionDescription").val("");
+		jQuery("#constraints ul").append('<li><code>' + data.assertion + '</code><br>' + data.assertionDescription + '</li>');
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        alert("Error adding Constraint.\nReason: " + jqXHR.statusText + "\n" + jqXHR.responseText);
+      }
+    });
+  }
+
+  function removeAssertion(assertion, elementId) {
+	jQuery.ajax({
+      type: 'DELETE',
+      url: '${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc/hsgs/${hsg.name}/hss/${hs.name}/units/${hsu.name}/hooks/constraints?methodapipath=${hook.methodAPIPath}&assertion=' + assertion,
+	  dataType: 'json',
+      success: function(data, textStatus, jqXHR) {
+        jQuery("#" + elementId).remove();
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        alert("Error removing assertion.\nReason: " + jqXHR.statusText + "\n" + jqXHR.responseText);
+      }
+    });
+  }
+  
+//-->
+</script>
+
+<h3>Hook ${hook.signature}</h3>
+<p>Open the <a href="${config.rootPath}${hook.methodAPIPath}" target="_blank">API documentation</a> of
+this Hook method for more information.</p>
+
+<h3>Constraints</h3>
+
+<div id="constraints" class="split tal">
+#if ( ${hook.constraints} )
+<h4>List of Assertions</h4>
+<ul>
+	#set ( $assertionCount = 0 )
+	#foreach ( ${constraint} in ${hook.constraints} )
+	#set ( $assertionCount = $assertionCount + 1 )
+	<li id="assertion${assertionCount}"><code>${constraint.assertion.signature}</code><br>
+		$!{constraint.description}<br>
+		[<a href="javascript:removeAssertion('${constraint.assertion.signature}', 'assertion${assertionCount}')">Remove</a>]<br></li>
+	#end
+</ul>
+#end
+</div>
+
+<div class="split tal">
+<h4>Add Constraint</h4>
+<p>Use the following syntax: Assertion '(' Parameterlist ')' and add a description.</p>
+<form name="addConstraintForm" id="addConstraintForm">
+    <input type="text" id="assertion" name="assertion" size="40" /><br>
+    <textarea name="assertionDescription" id="assertionDescription" cols="50" rows="5"></textarea>
+	<input type="submit" value="Add" onclick="addConstraint(); return false;" />
+</form>
+</div>
+
+#parse("/de/fct/companian/web/site/inc/footer.htm")

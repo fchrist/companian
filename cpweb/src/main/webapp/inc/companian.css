@@ -1,0 +1,141 @@
+@CHARSET "UTF-8";
+
+body {
+  font-family: serif;
+  font-size: 11pt;
+  
+  margin: 0px;
+  padding: 0px;
+  text-align: center;
+}
+
+table th {
+  font-weight: bold;
+  text-align: center;  
+}
+
+table.vertical_table th {
+	text-align: right;
+}
+
+.tal {
+  text-align: left;
+}
+
+.tac {
+  text-align: center;
+}
+
+.tar {
+  text-align: right;
+}
+
+.taj {
+  text-align: justify;
+}
+
+.box {
+  width: 300px;
+  
+  padding: 10px;
+  
+  text-align: justify;
+  overflow: auto;
+  
+  background-color: #ffffff;
+  float: left;
+}
+
+.split {
+  min-width: 200px;
+  max-width: 47%;
+  width: 47%;
+  
+  padding: 10px;
+  
+  overflow: auto;
+  
+  background-color: #ffffff;
+  float: left;
+}
+
+pre {
+  font-size: 10pt;
+}
+
+.pre {
+  font-family: monospace;
+  font-size: 10pt;
+}
+
+.editable {
+  border: 1px dashed black;
+  padding: 10px;
+  max-height: 600px;
+  overflow: auto;
+}
+
+/*  
+ *  Specific element formats
+ */
+
+div#page {
+  width: 100%;
+  
+  top: 0px;
+  margin-top: 0px;
+  margin-left: auto;
+  margin-right: auto;
+  
+  text-align: left; 
+}
+
+div#header {
+  font-family: sans-serif;
+  
+  width: 250px;
+  height: 100px;
+  
+  float: left;
+}
+
+div#navigation {
+  font-family: sans-serif;
+  padding: 2px;
+}
+
+ol#navigation_list {
+  margin: 0px;
+  padding: 0px;
+}
+
+ol#navigation_list li:before {
+  content: "\00AB ";
+}
+
+ol#navigation_list li {
+  display: inline;
+  list-style-type: none;
+  text-indent: -1em;
+  padding-right: 10px;
+}
+
+div#content {
+  position: absolute;
+  top: 100px;
+  border-top: 1px solid gray;
+  padding: 5px;
+  width: 95%;
+}
+
+.diffInfo {
+  color: gray;
+}
+
+.diffConflict {
+  color: red;
+}
+
+.diffWarning {
+  color: orange;
+}

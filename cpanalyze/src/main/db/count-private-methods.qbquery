@@ -1,0 +1,1 @@
+﻿SELECT COUNT(*) FROM methods m WHERE (m.accessFlags & 2)=2;

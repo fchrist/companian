@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+  <appender name="console" class="org.apache.log4j.ConsoleAppender">
+    <param name="Target" value="System.out" />
+    <layout class="org.apache.log4j.PatternLayout">
+      <param name="ConversionPattern" value="%-5p %c{1} - %m%n" />
+    </layout>
+  </appender>
+  
+  <appender name="cpglobal" class="org.apache.log4j.FileAppender">
+    <param name="File" value="${user.home}/.companian/logs/cp.log" />
+    <param name="Append" value="true" />
+    <layout class="org.apache.log4j.PatternLayout">
+      <param name="ConversionPattern" value="%d %-5p %c{3} - %m%n" />
+    </layout>
+  </appender>
+  
+  <appender name="cpcompare" class="org.apache.log4j.FileAppender">
+    <param name="File" value="${user.home}/.companian/logs/cp.compare.log" />
+    <param name="Append" value="true" />
+    <layout class="org.apache.log4j.PatternLayout">
+      <param name="ConversionPattern" value="%d %-5p %c{3} - %m%n" />
+    </layout>
+  </appender>  
+  
+  <appender name="cpanalyze" class="org.apache.log4j.FileAppender">
+    <param name="File" value="${user.home}/.companian/logs/cp.analyze.log" />
+    <param name="Append" value="true" />
+    <layout class="org.apache.log4j.PatternLayout">
+      <param name="ConversionPattern" value="%d %-5p %c{3} - %m%n" />
+    </layout>
+  </appender>
+  
+  <appender name="cpmodel" class="org.apache.log4j.FileAppender">
+    <param name="File" value="${user.home}/.companian/logs/cp.model.log" />
+    <param name="Append" value="true" />
+    <layout class="org.apache.log4j.PatternLayout">
+      <param name="ConversionPattern" value="%d %-5p %c{3} - %m%n" />
+    </layout>
+  </appender>  
+
+  <appender name="cpweb" class="org.apache.log4j.FileAppender">
+    <param name="File" value="${user.home}/.companian/logs/cp.web.log" />
+    <param name="Append" value="true" />
+    <layout class="org.apache.log4j.PatternLayout">
+      <param name="ConversionPattern" value="%d %-5p %c{3} - %m%n" />
+    </layout>
+  </appender>
+  
+  <logger name="de.fct.companian.web.site.products.jars.CompareModel" additivity="false">
+    <level value="info" />
+    <appender-ref ref="cpcompare" />
+  </logger>
+
+  <logger name="de.fct.companian.web.site.CCCModel" additivity="false">
+  	<level value="info" />
+  	<appender-ref ref="cpcompare" />
+  </logger>
+    
+  <logger name="de.fct.companian.ccc" additivity="false">
+    <level value="info" />
+    <appender-ref ref="cpcompare" />
+  </logger>
+    
+  <logger name="de.fct.companian.compare" additivity="false">
+    <level value="info" />
+    <appender-ref ref="cpcompare" />
+  </logger>
+
+  <logger name="de.fct.companian.web.site.products.jars.AnalyzeUseModel" additivity="false">
+  	<level value="info" />
+  	<appender-ref ref="cpcompare" />
+  </logger>
+  
+  <logger name="de.fct.companian.use" additivity="false">
+    <level value="info" />
+    <appender-ref ref="cpcompare" />
+  </logger>  
+  
+  <logger name="de.fct.companian.analyze.APIndexer" additivity="false">
+    <level value="info" />
+    <appender-ref ref="cpanalyze" />
+  </logger>
+  
+  <logger name="de.fct.companian.model" additivity="false">
+    <level value="info" />
+    <appender-ref ref="cpmodel" />
+  </logger>
+  
+  <logger name="de.fct.fdmm" additivity="false">
+    <level value="info" />
+    <appender-ref ref="cpmodel" />
+  </logger>  
+  
+  <logger name="de.fct.companian.proxies" additivity="false">
+    <level value="info" />
+    <appender-ref ref="cpmodel" />
+  </logger>
+  
+  <logger name="de.fct.companian.web" additivity="false">
+    <level value="info" />
+    <appender-ref ref="cpweb" />
+  </logger>
+
+  <logger name="de.fct.companian" additivity="false">
+    <level value="info" />
+    <appender-ref ref="cpglobal" />
+  </logger>
+
+  <root>
+    <level value="warn" />
+    <appender-ref ref="console" />
+  </root>
+
+</log4j:configuration>

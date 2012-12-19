@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Companian</title>
+
+<link rel="stylesheet" href="${config.rootPath}/inc/companian.css" type="text/css;charset=utf-8" />
+
+<link rel="icon" href="${config.rootPath}/favicon.ico" type="image/x-icon" />
+
+<!-- Integrate Aloha Editor -->
+<script type="text/javascript" src="${config.rootPath}/inc/aloha/aloha.js"></script>
+<script type="text/javascript"
+  src="${config.rootPath}/inc/aloha/plugins/com.gentics.aloha.plugins.Format/plugin.js"></script>
+<script type="text/javascript"
+  src="${config.rootPath}/inc/aloha/plugins/com.gentics.aloha.plugins.Table/plugin.js"></script>
+<script type="text/javascript"
+  src="${config.rootPath}/inc/aloha/plugins/com.gentics.aloha.plugins.List/plugin.js"></script>
+
+<!-- JSON-js lib -->
+<script type="text/javascript" src="${config.rootPath}/inc/json-js/json2.js"></script>
+
+<script src="${config.rootPath}/inc/companian.js"></script>
+
+<script type="text/javascript">
+<!--
+jQuery(document).ready(function()
+    {
+      initPage();
+    });
+//-->
+</script>
+</head>
+<body>
+
+<div id="page"> <!-- page starts here -->
+
+<div id="header">
+<h1>Companian</h1>
+
+<p>Version ${version}</p>
+</div>
+
+<div id="navigation">
+  <ol id="navigation_list">
+    #foreach ( $segment in $navigation )
+    <li>${segment}</li>
+    #end
+  </ol>
+</div>
+
+<div id="headline">
+  <h2>$title</h2>
+</div>
+
+<div id="content"> <!-- content starts here -->

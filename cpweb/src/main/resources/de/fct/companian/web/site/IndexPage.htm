@@ -1,0 +1,74 @@
+#parse("/de/fct/companian/web/site/inc/header.htm")
+
+<script type="text/javascript">
+<!--
+	function initPage() {
+	}
+
+	function performCCC() {
+		var usingJarId = jQuery("#selectusingjar").val();
+		var usedJarId = jQuery("#selectusedjar").val();
+		var futureJarId = jQuery("#selectfuturejar").val();
+		var url = "${config.rootPath}/site/ccc?usingJarId=" + usingJarId
+				+ "&usedJarId=" + usedJarId + "&futureJarId=" + futureJarId
+		window.location.href = url;
+	}
+//-->
+</script>
+
+<div class="split">
+<div id="indexed_archives" class="box">
+  <h3>Indexed Products</h3>
+  #parse("/de/fct/companian/web/site/products/ProductsDiv.htm")
+</div>
+
+<div id="index_archive" class="box">
+  <h3>Java Archive Indexer</h3>
+  <p>
+    To index a new Java Archive (JAR) file use the <strong><a href="${config.rootPath}/site/analyze">Java
+        Archive Indexer</a></strong>.<br /> The indexer will search for the compiled *.jar file and corresponding Apache
+    Maven *.pom and -sources.jar files.
+  </p>
+</div>
+</div>
+
+<div class="split">
+  <h3>Compatibility Checker</h3>
+  <p>Performs a usage analysis between an application archive and a used framework archive. Additionally,
+    a compatibility check for a future version of the framework is performed.</p>
+  <form name="cccform" id="cccform">
+    <table class="vertical_table">
+      <tr>
+        <th>Application</th>
+        <td><select name="selectusingjar" id="selectusingjar" size="1"> #foreach ( ${usingJar}
+            in ${useableJars} )
+            <option value="${usingJar.jarId}">${usingJar.product.name} :: ${usingJar.artifact} -
+              ${usingJar.version}</option> #end
+        </select></td>
+      </tr>
+      <tr>
+        <th>Used Framework Version</th>
+        <td><select name="selectusedjar" id="selectusedjar" size="1"> #foreach ( ${usedJar} in
+            ${useableJars} )
+            <option value="${usedJar.jarId}">${usedJar.product.name} :: ${usedJar.artifact} -
+              ${usedJar.version}</option> #end
+        </select></td>
+      </tr>
+      <tr>
+        <th>Future Framework Version</th>
+        <td><select name="selectfuturejar" id="selectfuturejar" size="1"> #foreach (
+            ${futureJar} in ${useableJars} )
+            <option value="${futureJar.jarId}">${futureJar.product.name} :: ${futureJar.artifact} -
+              ${futureJar.version}</option> #end
+        </select></td>
+      </tr>
+      <tr>
+        <th></th>
+        <td><input type="button" value="Perform Check" onClick="performCCC()" /></td>
+      </tr>
+    </table>
+  </form>
+
+</div>
+
+#parse("/de/fct/companian/web/site/inc/footer.htm")

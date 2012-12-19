@@ -1,0 +1,34 @@
+#parse("/de/fct/companian/web/site/inc/header.htm")
+
+<script type="text/javascript">
+<!--
+function initPage() {
+
+}
+
+//-->
+</script>
+
+<h3>Package ${package.name}</h3>
+
+<div class="box">
+<h4>Interfaces</h4>
+<ul>
+  #foreach ( ${interface} in ${package.ownedInterfaces} )
+  <li><a href="${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/api/${package.name}/${interface.name}">${interface.name}</a></li>
+  #end
+</ul>
+</div>
+
+#if ( ${package.ownedClasses} )
+<div class="box">
+<h4>Classes</h4>
+<ul>
+  #foreach ( ${cl} in ${package.ownedClasses} )
+  <li><a href="${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/api/${package.name}/${cl.name}">${cl.name}</a></li>
+  #end
+</ul>
+</div>
+#end
+
+#parse("/de/fct/companian/web/site/inc/footer.htm")

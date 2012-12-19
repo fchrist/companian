@@ -1,0 +1,105 @@
+#parse("/de/fct/companian/web/site/inc/header.htm")
+
+<script type="text/javascript">
+<!--
+  function initPage() {
+    jQuery("#description").aloha();
+
+    GENTICS.Aloha.EventRegistry.subscribe(GENTICS.Aloha, "editableDeactivated", saveEditable);
+  }
+
+  function saveEditable(event, eventProperties) {
+    jQuery
+        .ajax({
+          type : 'POST',
+          url : '${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc/bindings/${binding.name}/metaentries/${metaentry.name}',
+          data : 'content=' + eventProperties.editable.getContents() + '&id='
+              + eventProperties.editable.getId(),
+          success : function(data, textStatus, jgXHR) {
+          }
+        });
+  }
+
+  function putTask() {
+    jQuery
+        .ajax({
+          type : 'PUT',
+          url : "${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc/bindings/${binding.name}/metaentries/${metaentry.name}/tasks",
+          dataType : 'json',
+          data : jQuery("#addTaskForm").serialize(),
+          success : function(data, textStatus, jgXHR) {
+            jQuery("#tasks ul").append('<li>' + data.taskName + '</li>');
+            jQuery("#taskName").val("");
+            jQuery("#selector").val("");
+            jQuery("#content").val("");
+            jQuery("#descriptorName").val("");
+            jQuery("#descriptorSchemaUrn").val("");
+          },
+          error : function(jqXHR, textStatus, errorThrown) {
+            alert("Error putting new Task.\n" + jqXHR.statusText + "\n" + jqXHR.responseText);
+          }
+        });
+  }
+//-->
+</script>
+
+<div class="split">
+  <h2>Meta Entry: ${metaentry.name}</h2>
+  <div id="description" class="editable">${metaentry.description}</div>
+</div>
+
+<div class="split">
+  <div id="tasks">
+    <h3>Tasks</h3>
+    <ul>
+      #foreach ( ${task} in ${metaentry.tasks} )
+      <li><b>${task.name}</b><br> ${task.selector} -&gt; ${task.content} #if ( ${task.descriptor} )
+        <br>${task.descriptor.name} : ${task.descriptor.schemaUrn} #end</li> #end
+    </ul>
+  </div>
+
+  <div id="add_task_meta_entry">
+    <h4>Add Task</h4>
+    <p>Fill in the form to specify a task that has to be performed with respect to the defined descriptor.
+       For example, a task could be to add a certain element to a deployment descriptor. The task defines what
+       a developer has to do in order to create a binding between an extension and the framework.</p>
+    <form name="addTaskForm" id="addTaskForm">
+      <table class="vertical_table">
+        <tbody>
+          <tr>
+            <th colspan="2" style="text-align: center">Task</th>
+          </tr>
+          <tr>
+            <th>Name:</th>
+            <td><input type="text" id="taskName" name="taskName" size="40" /></td>
+          </tr>
+          <tr>
+            <th>Selector:</th>
+            <td><input type="text" id="selector" name="selector" size="40" /></td>
+          </tr>
+          <tr>
+            <th>Content:</th>
+            <td><input type="text" id="content" name="content" size="40" /></td>
+          </tr>
+          <tr>
+            <th colspan="2" style="text-align: center">Descriptor</th>
+          </tr>
+          <tr>
+            <th>Name:</th>
+            <td><input type="text" id="descriptorName" name="descriptorName" size="40" /></td>
+          </tr>
+          <tr>
+            <th>Schema URN:</th>
+            <td><input type="text" id="descriptorSchemaUrn" name="descriptorSchemaUrn" size="40" /></td>
+          </tr>
+          <tr>
+            <th></th>
+            <td><input type="submit" value="Add" onclick="putTask(); return false;" /></td>
+          </tr>
+        </tbody>
+      </table>
+    </form>
+  </div>
+</div>
+
+#parse("/de/fct/companian/web/site/inc/footer.htm")

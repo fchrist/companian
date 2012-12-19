@@ -1,0 +1,74 @@
+#parse("/de/fct/companian/web/site/inc/header.htm")
+
+<script type="text/javascript">
+<!--
+  function initPage() {
+	updateJobStatusList();
+  }
+//-->
+</script>
+
+<script type="text/javascript">
+<!--
+  function sendAnalyzeRequest() {
+    jQuery.ajax({
+      type: 'POST',
+      url: '${config.rootPath}/site/analyze',
+      data: jQuery("#analyzeform").serialize(),
+      dataType: 'json',
+      success: function(data, textStatus, jgXHR) {
+        jQuery("#analyze_dir").val("");
+        jQuery("#analyze_request_status").text("Analysis with ID " + data.id + " started.");
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+    	jQuery("#analyze_request_status").text("Error starting analysis. Reason: " + textStatus);
+      }      
+    });
+  }
+
+  function updateJobStatusList() {
+    jQuery.ajax({
+      type: 'GET',
+      url: '${config.rootPath}/site/analyze/status',
+      dataType: 'json',
+      success: function(data, textStatus, jgXHR) {
+        if (data.jobs.length > 0) {
+          var dataAsHtml = "<ul class=\"joblist\">";
+          for (var i=0; i < data.jobs.length; i++) {
+            dataAsHtml += "<li>Job " + data.jobs[i].name + " (ID=" + data.jobs[i].id + ") " + data.jobs[i].status + "</li>";
+          }
+          dataAsHtml += "</ul>";
+          jQuery("#jobstatus").html(dataAsHtml);
+        }
+        else {
+          jQuery("#jobstatus").html("<em>No running jobs.</em>");
+        }
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        alert(textStatus);
+      }
+    });
+  }
+
+//-->
+</script>
+
+<div id="new_indexing_job" class="box">
+<h3>New Indexing Job</h3>
+<p>Specify the directory on the server where the Java Archive Indexer should start its search.
+The indexer will do a transitive search in the sub directories for compiled *.jar and corresponding
+Apache Maven *.pom and *-sources.jar files.</p>
+
+<form name="analyzeform" id="analyzeform" method="post" action=""><input type="text" id="analyze_dir"
+  name="analyze_dir" size="30" /> <input type="submit" value="Analyze"
+  onclick="sendAnalyzeRequest(); return false;" /><br>
+<span id="analyze_request_status"></span></form>
+</div>
+
+<div id="running_indexer_jobs" class="box">
+<h3>Running Indexer Jobs</h3>
+<div id="jobstatus">Job Status List</div>
+<p><a href="#" onclick="updateJobStatusList(); return false;">Refresh</a></p>
+</div>
+
+#parse("/de/fct/companian/web/site/inc/footer.htm")

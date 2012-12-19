@@ -1,0 +1,70 @@
+#parse("/de/fct/companian/web/site/inc/header.htm")
+
+<script type="text/javascript">
+<!--
+  function initPage() {
+	jQuery("#hsgName").aloha();
+    jQuery("#hotSpotGroupDescription").aloha();
+    GENTICS.Aloha.EventRegistry.subscribe(GENTICS.Aloha, "editableDeactivated", saveEditable);
+  }
+
+  function saveEditable(event, eventProperties) {
+    jQuery.ajax({
+      type: 'POST',
+      url: '${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc/hsgs/${hsg.name}',
+      data: 'content=' + eventProperties.editable.getContents() + '&id=' + eventProperties.editable.getId(),
+      success: function(data, textStatus, jgXHR) {
+          if (eventProperties.editable.getId() == 'hsgName') {
+              window.location.href = '${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc/hsgs/' + eventProperties.editable.getContents();
+          }
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+          alert("Error updating hotspot group.\n" + jqXHR.statusText + "\n" + jqXHR.responseText);
+          jQuery("#" + eventProperties.editable.getId()).text('${hsg.name}');
+      }
+    });
+
+  }
+
+  function saveNewHotSpot() {
+    jQuery.ajax({
+      type: 'POST',
+      url: "${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc/hsgs/${hsg.name}/hss",
+      dataType: 'json',
+      data: jQuery("#newHotSpotForm").serialize(),
+      success: function(data, textStatus, jgXHR) {
+        jQuery("#hotSpots ul").append('<li><a href="${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc/hsgs/${hsg.name}/hss/' + data.name + '">' + data.name + '</a></li>');
+        jQuery("#name").val("");
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        alert("Error saving new hotspot.\n" + jqXHR.statusText + "\n" + jqXHR.responseText);
+      } 
+    });
+  }
+//-->
+</script>
+
+<div class="split">
+<h3>Hotspot Group: <span id="hsgName" class="editable">${hsg.name}</span></h3>
+
+<div id="hotSpotGroupDescription" class="editable">${hsg.description}</div>
+</div>
+
+<div id="hotSpots" class="split box">
+<h4>Hotspots</h4>
+<ul>
+  #foreach ( ${hs} in ${hsg.hotSpots} )
+  <li><a
+    href="${config.rootPath}/site/products/${product.productId}/jars/${jar.jarId}/doc/hsgs/${hsg.name}/hss/${hs.name}">${hs.name}</a></li>
+  #end
+</ul>
+<ul>
+  <li>Add Hotspot<br>
+  <form name="newHotSpotForm" id="newHotSpotForm"><input type="text" id="name" name="name" /><input
+    type="submit" value="Add" onclick="saveNewHotSpot(); return false;" /></form>
+  </li>
+</ul>
+</div>
+
+
+#parse("/de/fct/companian/web/site/inc/footer.htm")
